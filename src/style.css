@@ -1,13 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Life+Savers:wght@400;700;800&display=swap');
+
 body {
-  font-size: 300%;
-  font-family: fantasy;
+  font-family: "Playwrite DE Grund", cursive;
+  font-optical-sizing: auto;
 }
 
-.css-test {
-  text-decoration: hsl(278, 100%, 50%, 0.666) wavy line-through 0.2em;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Caprasimo", sans-serif;
+  font-weight: normal;
 }
 
-.css-test + ::before {
-  color: hsl(278, 100%, 50%);
-  content: " working.";
+/**
+ * This is a common style for code.
+ *
+ */
+ code {
+  background-color: lightblue;
+  border-radius: 0.25em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  color: blue;
+  font-family: "Life Savers", monospace;
+  font-weight: 800;
 }
