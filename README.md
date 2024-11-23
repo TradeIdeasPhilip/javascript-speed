@@ -126,14 +126,75 @@ timeIt(100000000)
 (4) [540, 559.7999999970198, 594.7000000029802, 640.2999999970198]
 ```
 
+## The Magic _Inside_ a Function
+
+The first test did not show any signs of optimization.
+On a hunch I moved some things into `getRoman()`.
+
+First, I created `getRoman1()` which includes its own copy of `const ROMAN_INDEX = 1;`.
+If there is no optimization this might slow things down because we are creating that constant every time through the loop.
+However, moving the constant into the function actually made it much faster.
+Presumably the new version is optimizing that constant away where the old version had to look it up every time.
+
+`getRoman2()` is the same except I added one additional named constant.
+This is useful in the debugger and sometimes makes the code more readable.
+This cost of this is tiny.
+I'm not even certain it's real.
+
+`getRoman3()` is the same but with _a lot_ more unnecessary named constants.
+When I tested with 100,000,000 iterations this was just a tiny bit slower than the previous test.
+When I tried again with 1,000,000,000 (one billion) iterations this test was actually a tiny bit faster than the previous one.
+
+Clearly the cost of an extra constant inside of a function is **too small for me to measure**, if it exists at all.
+
+Here's the raw data.
+The first four items in the result are the same as in the previous test.
+The next three items are the times for `getRoman1()`, `getRoman2()`, and `getRoman3()`, in that order.
+
+```
+timeIt(100000000)
+(7) [522.3999999910593, 668.2999999970198, 717.4000000059605, 768.2000000029802, 702.3999999910593, 707.1000000089407, 708.5]
+timeIt(1000000000)
+(7) [5200.29999999702, 5644, 6030.5999999940395, 6524.4000000059605, 5999.5999999940395, 6038.800000011921, 6036.399999991059]
+```
+
+## Just in Time
+
+I finally found evidence of the Just in Time compiler.
+
+I was looking for something else.
+I added `getRoman1a()`, a small variation on the getRoman functions.
+I inserted this as the 6th result in each list.
+Don't worry about the details.
+All that matters is that I tested with 100,000,000 iterations, then with 1,000,000,000 iterations, then back to 100,000,000 iterations.
+
+```
+timeIt(100000000)
+(8) [523.2000000029802, 670.5999999940395, 700.1000000089407, 755.8999999910593, 702.9000000059605, 708.7999999970198, 705.7999999970198, 707.5]
+timeIt(1000000000)
+(8) [5283.29999999702, 5669.4000000059605, 5984.199999988079, 6449.600000008941, 6047, 6043.399999991059, 6037.100000008941, 6036.5999999940395]
+timeIt(100000000)
+(8) [541.7000000029802, 560.7999999970198, 591.5, 638.5999999940395, 597.6000000089407, 597.5999999940395, 597.2000000029802, 596.7000000029802]
+```
+
+Look at the rough size of each number.
+Focus on the first digit of each number.
+In the second row all but one of the tests was faster than in the first row.
+In the third row all of the tests ran faster than in the first or second row.
+
+Even after running these functions 1,000,000,000 times, the performance was still increasing.
+When exactly does a function get JIT'ed?
+I need to do more research here.
+None of the other measurements will make any sense until I understand what makes the measurements settle down.
+
 ## How to Use
 
-Currently this is very primitive.
+Currently this software is very primitive.
 All user interaction is done through the console.
 It's only aimed at programmers.
 
-See the log immediately above this.
-That is an exact copy of what I typed into the console and JavaScript's responses.
+Look for "timeIt" in the examples above.
+These are exact copies of what I typed into the console and JavaScript's responses.
 
 ## Colophon
 
