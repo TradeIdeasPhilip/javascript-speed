@@ -19,8 +19,8 @@ But imagine the following case.
 Someone gives you a _not-quite-opaque_ object.
 
 ```
-type Record = [number, string, bigint];
-const testData: Record = [1, "ⅱ", 3n];
+type ExternalRecord = [number, string, bigint];
+const testData: ExternalRecord = [1, "ⅱ", 3n];
 ```
 
 The fields are stored in an array, but it's really more like a record.
@@ -43,7 +43,7 @@ And if you really want to keep [Uncle Bob](https://www.amazon.com/Clean-Code-Han
 ```
 const ROMAN_INDEX = 1;
 
-function getRoman(input: Record): string {
+function getRoman(input: ExternalRecord): string {
   return input[ROMAN_INDEX];
 }
 
@@ -195,6 +195,9 @@ It's only aimed at programmers.
 
 Look for "timeIt" in the examples above.
 These are exact copies of what I typed into the console and JavaScript's responses.
+
+**New:** `timeGroups()` will call `timeIt()` and will display the result on the web page in a table.
+I am currently investigating the way code seems to run faster over time.
 
 ## Colophon
 
