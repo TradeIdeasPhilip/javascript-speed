@@ -9,6 +9,10 @@ I have to keep reminding myself not the optimize prematurely.
 
 The first test!
 
+This was interesting, and I got some results.
+But my next test goes further and has some crazy and confusing results.
+So keep reading, but don't take any of my conclusions too seriously.
+
 ### The Problem
 
 This one's been bothering me forever.
@@ -186,6 +190,15 @@ Even after running these functions 1,000,000,000 times, the performance was stil
 When exactly does a function get JIT'ed?
 I need to do more research here.
 None of the other measurements will make any sense until I understand what makes the measurements settle down.
+
+## How does it change over time?
+
+I'm trying to take a closer look at the compiler.
+I wish I knew what it was doing.
+
+`timeGroups()` takes a close look at this.
+And it's giving me very strange results.
+I need to keep exploring here.
 
 ## How to Use
 

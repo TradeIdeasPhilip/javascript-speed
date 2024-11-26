@@ -32,6 +32,11 @@ code {
   font-weight: 800;
 }
 
+a {
+  font-weight: 800;
+  font-family: "Life Savers", monospace;
+}
+
 table {
   border-spacing: 0;
   margin: 1em;
