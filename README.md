@@ -3,7 +3,7 @@
 This is a sandbox for performance testing some simple things in JavaScript.
 For the most part the questions are _"Is X faster than Y?"_ and **"Do I care?"**
 The second part is probably more relevant.
-I have to keep reminding myself not the optimize prematurely.
+I have to keep reminding myself not to optimize prematurely.
 
 ## How expensive is a function call & variable lookup?
 
@@ -61,10 +61,10 @@ How much is this nice readable code costing me?
 
 Back in the day, I knew that scripting languages would charge me extra for the readable code.
 But C++ would make it disappear at compile time.
-The cost doesn't always matter, but I still like to know the cost.
+The cost doesn't always matter, but I still want to know the cost.
 
 Now JavaScript brings new levels of compilation and optimization.
-What does that do to the calculations in my head?
+What does that do to the estimates in my head?
 Do these things cost me anything?
 And if so, how much?
 
@@ -97,11 +97,11 @@ I had to go up to 100,000,000 iterations to get results that made sense compared
 Even when I did 10,000,000 iterations, the version that does nothing was slower than any of the versions that actually did something.
 
 Here are the actual results that I've seen.
-(I will eventually add code to format this better.)
 The input to `timeIt()` is the number of iterations.
 The result says how many milliseconds it took to do all of the iterations of each test.
 
 The tests are listed in the same order as above: baseline, read actual data, use a named constant, then call a function.
+(Later these will be called "loop", "read", "named constant", and "function external constant", respectively.)
 
 ```
 timeIt(1)
@@ -198,7 +198,26 @@ I wish I knew what it was doing.
 
 `timeGroups()` takes a close look at this.
 And it's giving me very strange results.
-I need to keep exploring here.
+I am running the same 8 tests exactly as described above.
+I added a loop around the previous set of tests, so I can run those 10 times in a row.
+
+This first table shows a typical result when I run 10,000 iterations of each test.
+Each row is testing one thing.
+Each column repeats the same tests.
+The tests are run all the way down each column before starting the next column.
+
+|                              | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | 10  |
+| ---------------------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| loop                         | 0.8 | 0.1 | 0.0 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | 0.2 | 0.1 |
+| read                         | 0.4 | 0.1 | 0.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 | 0.1 | 0.0 |
+| named constant               | 0.3 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 |
+| function external constant   | 0.6 | 0.2 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 |
+| function local constant      | 0.4 | 0.1 | 0.2 | 0.1 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | 0.1 |
+| function literal constant    | 0.3 | 0.1 | 0.0 | 0.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 | 0.1 |
+| function additional constant | 0.2 | 0.1 | 0.2 | 0.2 | 0.2 | 0.2 | 0.1 | 0.1 | 0.2 | 0.2 |
+| function lots of constants   | 0.4 | 0.2 | 0.1 | 0.0 | 0.0 | 0.1 | 0.1 | 0.1 | 0.0 | 0.1 |
+
+**Coming Soon:** I tried the same thing with 10x as many iterations, 100x as many, etc. Those results don't make sense. The first column is usually much bigger than the rest, and the second column is a little bigger than the rest, and the others are all faster than the first two columns and generally similar to each other. That makes no sense. Why would it take longer to warm up when it had a larger workload? Why would it need to warm up again when I repeat the command at the console? I need a better way to create tables in this document.
 
 ## How to Use
 
