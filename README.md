@@ -12,6 +12,7 @@ The first test!
 This was interesting, and I got some results.
 But my next test goes further and has some crazy and confusing results.
 So keep reading, but don't take any of my conclusions too seriously.
+I'm documenting a journey.
 
 ### The Problem
 
@@ -201,23 +202,118 @@ And it's giving me very strange results.
 I am running the same 8 tests exactly as described above.
 I added a loop around the previous set of tests, so I can run those 10 times in a row.
 
-This first table shows a typical result when I run 10,000 iterations of each test.
+This first table shows a typical result when I run **10,000 iterations** of each test.
 Each row is testing one thing.
 Each column repeats the same tests.
 The tests are run all the way down each column before starting the next column.
 
 |                              | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | 10  |
 | ---------------------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| loop                         | 0.8 | 0.1 | 0.0 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | 0.2 | 0.1 |
-| read                         | 0.4 | 0.1 | 0.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 | 0.1 | 0.0 |
-| named constant               | 0.3 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 |
-| function external constant   | 0.6 | 0.2 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 |
-| function local constant      | 0.4 | 0.1 | 0.2 | 0.1 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | 0.1 |
-| function literal constant    | 0.3 | 0.1 | 0.0 | 0.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 | 0.1 |
-| function additional constant | 0.2 | 0.1 | 0.2 | 0.2 | 0.2 | 0.2 | 0.1 | 0.1 | 0.2 | 0.2 |
-| function lots of constants   | 0.4 | 0.2 | 0.1 | 0.0 | 0.0 | 0.1 | 0.1 | 0.1 | 0.0 | 0.1 |
+| loop                         | 0.7 | 0.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.0 | 0.1 | 0.1 | 0.0 |
+| read                         | 0.3 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | 0.2 |
+| named constant               | 0.4 | 0.2 | 0.2 | 0.1 | 0.1 | 0.0 | 0.1 | 0.1 | 0.1 | 0.1 |
+| function external constant   | 0.4 | 0.1 | 0.1 | 0.2 | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | 0.1 |
+| function local constant      | 0.5 | 0.2 | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 |
+| function literal constant    | 0.6 | 0.1 | 0.1 | 0.0 | 0.1 | 0.1 | 0.1 | 0.1 | 0.2 | 0.2 |
+| function additional constant | 0.6 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | 0.0 |
+| function lots of constants   | 0.5 | 0.1 | 0.1 | 0.2 | 0.2 | 0.2 | 0.2 | 0.2 | 0.1 | 0.2 |
 
-**Coming Soon:** I tried the same thing with 10x as many iterations, 100x as many, etc. Those results don't make sense. The first column is usually much bigger than the rest, and the second column is a little bigger than the rest, and the others are all faster than the first two columns and generally similar to each other. That makes no sense. Why would it take longer to warm up when it had a larger workload? Why would it need to warm up again when I repeat the command at the console? I need a better way to create tables in this document.
+This first table does not show any surprises.
+The first time I run each test it takes a lot longer than future times.
+That suggests it's slower before the JIT gets to it.
+The other times are all pretty close to each other.
+That suggest that the small changes I made had no appreciable effect.
+
+But I'm clearly pushing the limit on the precision. Let me try that again with **100,000 iterations**:
+
+|                              | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | 10  |
+| ---------------------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| loop                         | 2.6 | 0.9 | 0.5 | 0.5 | 0.5 | 0.4 | 0.4 | 0.4 | 0.3 | 0.4 |
+| read                         | 1.2 | 1.0 | 0.5 | 0.6 | 0.6 | 0.4 | 0.5 | 0.5 | 0.5 | 0.4 |
+| named constant               | 1.1 | 1.1 | 0.6 | 0.5 | 0.5 | 0.4 | 0.4 | 0.4 | 0.3 | 0.3 |
+| function external constant   | 1.4 | 1.0 | 0.5 | 0.5 | 0.5 | 0.5 | 0.4 | 0.4 | 0.4 | 0.5 |
+| function local constant      | 1.2 | 1.1 | 0.5 | 0.5 | 0.4 | 0.5 | 0.5 | 0.3 | 0.3 | 0.3 |
+| function literal constant    | 1.0 | 0.9 | 0.5 | 0.6 | 0.5 | 0.4 | 0.4 | 0.4 | 0.4 | 0.4 |
+| function additional constant | 1.0 | 0.8 | 0.6 | 0.5 | 0.4 | 0.5 | 0.5 | 0.4 | 0.5 | 0.4 |
+| function lots of constants   | 1.1 | 0.9 | 0.4 | 0.4 | 0.5 | 0.4 | 0.4 | 0.4 | 0.3 | 0.3 |
+
+My quick impressions:
+
+- The time required seems to decrease gradually between the first run and the last. I would have expected a sudden jump between the interpreted code and the compiled code, not a continuous change.
+- I'm not sure why the different columns are so different. I did not restart anything. The tests each ran 100,000 times to produce the previous table, so everything should have been warmed up, JIT'ed and compiled before any of the tests in this table were run.
+- Most of the numbers in this table are _roughly_ 10× the corresponding numbers in the previous table, as expected.
+- I still don't have enough precision.
+
+This next table shows the results of **1,000,000 iterations**:
+
+|                              | 1    | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | 10  |
+| ---------------------------- | ---- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| loop                         | 12.1 | 4.8 | 3.4 | 3.4 | 3.4 | 3.2 | 3.4 | 3.3 | 3.4 | 3.4 |
+| read                         | 11.7 | 6.3 | 3.4 | 3.3 | 3.3 | 3.5 | 3.3 | 3.4 | 3.3 | 3.4 |
+| named constant               | 7.7  | 5.5 | 3.3 | 3.4 | 3.3 | 3.3 | 3.4 | 3.4 | 3.3 | 3.3 |
+| function external constant   | 7.8  | 6.0 | 3.4 | 3.3 | 3.4 | 3.4 | 3.3 | 3.3 | 3.4 | 3.7 |
+| function local constant      | 6.4  | 5.5 | 3.4 | 3.4 | 3.4 | 3.3 | 3.4 | 3.3 | 3.4 | 3.4 |
+| function literal constant    | 6.0  | 5.6 | 3.3 | 3.3 | 3.3 | 3.4 | 3.3 | 3.4 | 3.3 | 3.3 |
+| function additional constant | 5.6  | 5.6 | 3.3 | 3.4 | 3.4 | 3.3 | 3.3 | 3.3 | 3.4 | 3.4 |
+| function lots of constants   | 5.7  | 5.5 | 3.4 | 3.3 | 3.4 | 3.4 | 3.4 | 3.4 | 3.3 | 3.3 |
+
+Things are settling down a lot.
+The first column is still the slowest, especially at the top.
+The second column is still slower than the remaining columns.
+
+I'm still confused by the first column.
+Why are things slow?
+All I did was run `timeGroups()` again in the console.
+I didn't restart anything.
+
+The measurements still aren't precise enough for me to see what I'm looking for.
+Remember, the first row is the baseline.
+All other rows include the baseline plus some additional work.
+But some rows show smaller numbers than the top row.
+The error in my measurements is still bigger than the things I'm looking for.
+Let's try **10,000,000 iterations**:
+
+|                              | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   |
+| ---------------------------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| loop                         | 62.4 | 47.0 | 33.3 | 33.2 | 33.3 | 33.7 | 33.2 | 33.3 | 33.3 | 33.2 |
+| read                         | 64.7 | 63.0 | 33.6 | 33.6 | 33.4 | 33.5 | 33.5 | 33.6 | 33.6 | 33.5 |
+| named constant               | 55.7 | 54.8 | 33.5 | 33.6 | 33.7 | 33.5 | 33.6 | 33.6 | 33.5 | 33.6 |
+| function external constant   | 60.6 | 59.7 | 33.5 | 33.5 | 33.5 | 33.6 | 33.6 | 33.6 | 33.6 | 33.5 |
+| function local constant      | 56.0 | 55.4 | 33.6 | 33.5 | 33.5 | 33.5 | 33.5 | 33.5 | 33.5 | 33.7 |
+| function literal constant    | 55.9 | 55.1 | 33.6 | 33.5 | 33.6 | 33.5 | 33.6 | 33.6 | 33.6 | 33.5 |
+| function additional constant | 56.1 | 55.3 | 33.6 | 33.5 | 33.6 | 33.5 | 33.5 | 33.5 | 33.9 | 33.6 |
+| function lots of constants   | 56.0 | 55.0 | 33.5 | 33.6 | 33.6 | 33.6 | 33.6 | 33.5 | 33.5 | 33.5 |
+
+Now this is getting very strange.
+
+Columns 3-10 are consistent with the previous table.
+It takes 10× as long to run 10× as many iterations.
+The obvious error in the readings is still larger than any of the differences I was looking for.
+If I was only looking at these columns I'd be happy to say that function calls and named constants have no appreciable cost.
+However, columns 1 & 2 still baffle me.
+I'm afraid to draw any conclusions until I understand what's going on there.
+
+The numbers in the first column are almost twice as high as the numbers near the end.
+The numbers in the second column are similar to the numbers in the first column.
+I can't make any sense of that.
+If this is just JIT, there should be a fixed cost, not something proportional to the total work.
+There is not special that's happening in my code between the 2nd and 3rd columns of tests.
+
+If brute force isn't working, you aren't using enough of it. **100,000,000 iterations**:
+
+|                              | 1     | 2     | 3     | 4     | 5     | 6     | 7     | 8     | 9     | 10    |
+| ---------------------------- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- |
+| loop                         | 504.3 | 481.4 | 332.8 | 332.2 | 332.8 | 332.7 | 332.4 | 332.2 | 332.9 | 332.2 |
+| read                         | 646.9 | 635.7 | 336.7 | 335.9 | 335.7 | 337.8 | 335.8 | 335.5 | 335.3 | 336.0 |
+| named constant               | 557.5 | 548.0 | 335.8 | 335.4 | 337.7 | 337.2 | 335.5 | 335.6 | 335.5 | 335.3 |
+| function external constant   | 605.5 | 596.4 | 335.7 | 335.3 | 336.3 | 335.8 | 335.6 | 335.6 | 335.8 | 335.5 |
+| function local constant      | 566.9 | 553.6 | 335.7 | 335.6 | 336.9 | 335.3 | 336.0 | 335.4 | 335.6 | 335.8 |
+| function literal constant    | 559.3 | 550.2 | 335.4 | 335.5 | 335.7 | 335.4 | 335.3 | 335.9 | 335.4 | 335.7 |
+| function additional constant | 559.7 | 551.2 | 336.0 | 335.3 | 335.4 | 336.0 | 335.6 | 335.4 | 335.9 | 335.2 |
+| function lots of constants   | 558.8 | 550.3 | 335.3 | 340.7 | 335.4 | 335.4 | 338.4 | 335.5 | 335.5 | 336.0 |
+
+My results are the same as before.
+I must be missing something.
 
 ## How to Use
 
@@ -225,11 +321,15 @@ Currently this software is very primitive.
 All user interaction is done through the console.
 It's only aimed at programmers.
 
-Look for "timeIt" in the examples above.
-These are exact copies of what I typed into the console and JavaScript's responses.
+`function timeIt(iterationCount: number)` will run each test the requested number of times and will return a map from the test name to the execution time in milliseconds.
+Note that the output format has changed slightly since i used `timeIt()` in some of the examples above.
+Originally this returned an array of times without any names.
 
-**New:** `timeGroups()` will call `timeIt()` and will display the result on the web page in a table.
-I am currently investigating the way code seems to run faster over time.
+`timeGroups(iterationsPerGroup: number, groupCount: number)` will call `timeIt()` multiple times in a row and will display the results in a table. I used a groupCount of 10 in all of the examples in this document.
+
+I used `function tableToMarkdown(element: Element): string` to convert the HTML tables into a markdown for this document.
+
+All three of these functions are exported to the global namespace, a.k.a. the window object.
 
 ## Colophon
 

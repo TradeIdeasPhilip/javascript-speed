@@ -127,44 +127,44 @@ class StopWatch {
   }
 }
 
-function timeIt(count: number) {
+function timeIt(iterationCount: number) {
   const stopWatch = new StopWatch();
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = "ⅱ";
   }
   stopWatch.save("loop");
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = testData[1];
   }
   stopWatch.save("read");
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = testData[ROMAN_INDEX];
   }
   stopWatch.save("named constant");
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = getRoman(testData);
   }
   stopWatch.save("function external constant");
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = getRoman1(testData);
   }
   stopWatch.save("function local constant");
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = getRoman1a(testData);
   }
   stopWatch.save("function literal constant");
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = getRoman2(testData);
   }
   stopWatch.save("function additional constant");
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < iterationCount; i++) {
     memoryHole = getRoman3(testData);
   }
   stopWatch.save("function lots of constants");
@@ -243,8 +243,63 @@ function timeGroups(iterationsPerGroup: number, groupCount: number) {
   const table = new GroupTable(...groups);
   document.body.appendChild(table.tableElement);
   return groups;
-  //console.table(results);
+}
+
+/**
+ * Translate a given HTML table into markdown.
+ * @param element The table you want to convert to markdown, or any element within that table.
+ *
+ * In practice I usually inspect an element in the browser, then run `tableToMarkdown($0);` in the console.
+ * @returns A string that you can copy and paste into a `*.md` file.
+ */
+function tableToMarkdown(element: Element): string {
+  while (!(element instanceof HTMLTableElement)) {
+    const parent = element.parentElement;
+    if (parent == null) {
+      throw new Error("Can't find table!");
+    }
+    element = parent;
+  }
+  const rows = element.rows;
+  if (rows.length == 0) {
+    throw new Error("Empty table!  0 Rows");
+  }
+  const expectedColumnCount = rows[0].cells.length;
+  if (expectedColumnCount == 0) {
+    throw new Error("Empty table!  0 Columns");
+  }
+  let result = "";
+  Array.from(rows).forEach((row, rowIndex) => {
+    const cells = Array.from(row.cells);
+    if (cells.length != expectedColumnCount) {
+      console.warn(
+        `Row #${initializedArray} has ${cells.length} cells but the header has ${expectedColumnCount} cells.`
+      );
+    }
+    result +=
+      "|" +
+      cells
+        .map((cellElement) => {
+          const text = cellElement.innerText;
+          const escaped = text
+            .replaceAll("|", "¦")
+            .replaceAll("\n", "␊")
+            .replaceAll("\r", "␍")
+            .replaceAll("-", "‑");
+          return escaped;
+        })
+        .join("|") +
+      "|\n";
+    if (rowIndex == 0) {
+      for (let i = 0; i < expectedColumnCount; i++) {
+        result += "|-";
+      }
+      result += "|\n";
+    }
+  });
+  return result;
 }
 
 (window as any).timeIt = timeIt;
 (window as any).timeGroups = timeGroups;
+(window as any).tableToMarkdown = tableToMarkdown;
