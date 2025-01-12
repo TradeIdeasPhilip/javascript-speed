@@ -18,7 +18,7 @@ I'm documenting a journey.
 
 This one's been bothering me forever.
 Back in the day I wrote a lot of high performance code in C++ and a lot of other code in [TCL](https://www.tcl.tk/about/language.html).
-For the most part TCL was "easier".
+For the most part TCL was "easier."
 But imagine the following case.
 
 Someone gives you a _not-quite-opaque_ object.
@@ -61,7 +61,7 @@ But then I start to worry.
 How much is this nice readable code costing me?
 
 Back in the day, I knew that scripting languages would charge me extra for the readable code.
-But C++ would make it disappear at compile time.
+While C++ would make it disappear at compile time.
 The cost doesn't always matter, but I still want to know the cost.
 
 Now JavaScript brings new levels of compilation and optimization.
@@ -322,7 +322,7 @@ All user interaction is done through the console.
 It's only aimed at programmers.
 
 `function timeIt(iterationCount: number)` will run each test the requested number of times and will return a map from the test name to the execution time in milliseconds.
-Note that the output format has changed slightly since i used `timeIt()` in some of the examples above.
+Note that the output format has changed slightly since I used `timeIt()` in some of the examples above.
 Originally this returned an array of times without any names.
 
 `timeGroups(iterationsPerGroup: number, groupCount: number)` will call `timeIt()` multiple times in a row and will display the results in a table. I used a groupCount of 10 in all of the examples in this document.
