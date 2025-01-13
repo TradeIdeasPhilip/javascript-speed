@@ -1,5 +1,7 @@
 # JavaScript Speed Tester
 
+If you'd rather listen than read:  https://youtu.be/lWx9GAon7P8
+
 This is a sandbox for performance testing some simple things in JavaScript.
 For the most part the questions are _"Is X faster than Y?"_ and **"Do I care?"**
 The second part is probably more relevant.
@@ -239,8 +241,9 @@ But I'm clearly pushing the limit on the precision. Let me try that again with *
 
 My quick impressions:
 
-- The time required seems to decrease gradually between the first run and the last. I would have expected a sudden jump between the interpreted code and the compiled code, not a continuous change.
-- I'm not sure why the different columns are so different. I did not restart anything. The tests each ran 100,000 times to produce the previous table, so everything should have been warmed up, JIT'ed and compiled before any of the tests in this table were run.
+- The time required seems to decrease gradually between the first run and the last. ~~I would have expected a sudden jump between the interpreted code and the compiled code, not a continuous change.~~
+  - No. I recently learned that JavaScript has multiple layers of JIT'ing and optimizations can be added gradually over time.
+- I'm not sure why the different columns are so different. I did not restart anything. The tests each ran 10,000 times to produce the previous table, so everything should have been warmed up, JIT'ed and compiled before any of the tests in this table were run.
 - Most of the numbers in this table are _roughly_ 10× the corresponding numbers in the previous table, as expected.
 - I still don't have enough precision.
 
@@ -297,7 +300,7 @@ The numbers in the first column are almost twice as high as the numbers near the
 The numbers in the second column are similar to the numbers in the first column.
 I can't make any sense of that.
 If this is just JIT, there should be a fixed cost, not something proportional to the total work.
-There is not special that's happening in my code between the 2nd and 3rd columns of tests.
+There is nothing special that's happening in my code between the 2nd and 3rd columns of tests.
 
 If brute force isn't working, you aren't using enough of it. **100,000,000 iterations**:
 
